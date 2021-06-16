@@ -79,6 +79,9 @@ class Flappy_Bird:
 		def game_over(self):
 			pass
 
+		def reset_game(self):
+			pass
+
 
 def main():
 	pass
