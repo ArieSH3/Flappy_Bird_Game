@@ -3,6 +3,7 @@
 import pygame
 import random
 import sys
+import time
 
 
 
@@ -18,6 +19,8 @@ YELLOW = (255,255,0  )
 
 #_____________________ PARAMETERS _______________________
 
+FPS = 60
+
 BIRD_COL = YELLOW
 SCREEN_COL = BLACK
 OBST_COL = RED
@@ -32,7 +35,8 @@ class Flappy_Bird:
 				 obst_size = 40, # obstacle_size
 				 gravity = 10,
 				 flight_force = 50,
-				 h_move_speed = 10
+				 h_move_speed = 10,
+				 fps = FPS
 				):
 			# Predefined vars
 		self.win_width  = win_width
@@ -44,8 +48,23 @@ class Flappy_Bird:
 		self.flight_force = flight_force
 		self.h_move_speed = h_move_speed
 
+		self.fps = fps
+
 			# Newly defined
 		self.score = 0
+		self.bird_position = []  # Set initial position for the bird
+		self.obst_position = []  # Set positions for the obstacles 
+
+			# ***Initialize pygame and dependencies***
+		pygame.init()
+		self.screen = pygame.display.set_mode((self.win_width, self.win_height))
+		pygame.display.set_caption('Flappy Bird Reincarnate')
+
+		self.my_font = pygame.font.SysFont('consolas', 30)
+		self.clock = pygame.time.Clock()
+
+			# Init variable to calculate delta time
+		self.time_prev = time.time()
 
 
 
@@ -80,6 +99,9 @@ class Flappy_Bird:
 			pass
 
 		def reset_game(self):
+			pass
+
+		def delta_time(self):
 			pass
 
 
