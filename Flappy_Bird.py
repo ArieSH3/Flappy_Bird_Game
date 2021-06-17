@@ -17,7 +17,11 @@ GREEN  = (0  ,255,0  )
 BLUE   = (0  ,0  ,255)
 YELLOW = (255,255,0  )
 
-#_____________________ PARAMETERS _______________________
+SKY_BLUE_1 = (132,235,232)
+SKY_BLUE_2 = (150,235,221)
+SKY_BLUE_3 = (162,235,213)
+
+#_______________ SET PARAMETERS/COLOURS _________________
 
 FPS = 60
 
@@ -28,10 +32,10 @@ OBST_COL = RED
 
 
 class Flappy_Bird:
-	def __init__(self,
-				 win_width = 640,
-				 win_height = 480,
-				 bird_size = 20,
+	def __init__(self,			   # Aspect ratio 4:3
+				 win_width = 800,  # 640
+				 win_height = 600, # 480
+ 				 bird_size = 20,
 				 obst_size = 40, # obstacle_size
 				 gravity = 10,
 				 flight_force = 50,
@@ -47,7 +51,6 @@ class Flappy_Bird:
 		self.gravity    = gravity
 		self.flight_force = flight_force
 		self.h_move_speed = h_move_speed
-
 		self.fps = fps
 
 			# Newly defined
@@ -68,45 +71,65 @@ class Flappy_Bird:
 
 
 
-		def draw_scene(self):
-			pass
+	def draw_scene(self):
+		rect_top = pygame.Rect((0,0), (self.win_width, self.win_height/3))
+		rect_mid = pygame.Rect((0,self.win_height/3), (self.win_width, self.win_height/3))
+		rect_bot = pygame.Rect((0,(self.win_height/3)*2), (self.win_width, self.win_height/3))
 
-		def draw_bird(self):
-			pass
+		pygame.draw.rect(self.screen, SKY_BLUE_1, rect_top)
+		pygame.draw.rect(self.screen, SKY_BLUE_2, rect_mid)
+		pygame.draw.rect(self.screen, SKY_BLUE_3, rect_bot)
 
-		def draw_obstacles(self):
-			pass
+	def draw_bird(self):
+		pass
 
-		def move_bird(self):
-			pass
+	def draw_obstacles(self):
+		pass
 
-		def move_obstacle(self):
-			pass
+	def move_bird(self):
+		pass
 
-		def score(self):
-			pass
+	def move_obstacle(self):
+		pass
 
-		def write_score(self):
-			pass
+	def score(self):
+		pass
 
-		def handle_keys(self):
-			pass
+	def write_score(self):
+		pass
 
-		def is_collision(self):
-			pass
+	def handle_keys(self):
+		for event in pygame.event.get():
+				# QUIT
+			if event.type == pygame.QUIT:
+				pygame.quit()
+				sys.exit()
 
-		def game_over(self):
-			pass
+				# CONTROLS
+			# if event.type == pygame.key_pressed():
+			# 	pass 
 
-		def reset_game(self):
-			pass
+	def is_collision(self):
+		pass
 
-		def delta_time(self):
-			pass
+	def game_over(self):
+		pass
+
+	def reset_game(self):
+		pass
+
+	def delta_time(self):
+		pass
 
 
 def main():
-	pass
+	flappy = Flappy_Bird()
+
+	while True:
+		flappy.draw_scene()
+		flappy.handle_keys()
+	
+		pygame.display.update()
 
 
 
