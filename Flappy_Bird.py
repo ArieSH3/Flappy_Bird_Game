@@ -35,9 +35,9 @@ class Flappy_Bird:
 	def __init__(self,			   # Aspect ratio 4:3
 				 win_width = 800,  # 640
 				 win_height = 600, # 480
- 				 bird_size = 20,
+ 				 bird_size = 35,
 				 obst_size = 40, # obstacle_size
-				 gravity = 10,
+				 gravity = 15,
 				 flight_force = 50,
 				 h_move_speed = 10,
 				 fps = FPS
@@ -55,8 +55,9 @@ class Flappy_Bird:
 
 			# Newly defined
 		self.score = 0
-		self.bird_position = []  # Set initial position for the bird
+		self.bird_position = [(self.win_width/4, self.win_height/4)]  # Set initial position for the bird
 		self.obst_position = []  # Set positions for the obstacles 
+		self.jump = 0
 
 			# ***Initialize pygame and dependencies***
 		pygame.init()
@@ -81,13 +82,19 @@ class Flappy_Bird:
 		pygame.draw.rect(self.screen, SKY_BLUE_3, rect_bot)
 
 	def draw_bird(self):
-		pass
+		rect = pygame.Rect((self.bird_position[0][0], self.bird_position[0][1]), (self.bird_size, self.bird_size))
+		pygame.draw.rect(self.screen, YELLOW, rect)
 
 	def draw_obstacles(self):
 		pass
 
 	def move_bird(self):
-		pass
+		# Implementing force of gravity to the y axis of bird position
+		self.bird_position.insert(0, (self.bird_position[0][0], self.bird_position[0][1] + self.gravity))
+
+		if self.jump > 0:
+			self.bird_position.insert(0, (self.bird_position[0][0], self.bird_position[0][1] - self.jump))
+			self.jump -= 1
 
 	def move_obstacle(self):
 		pass
@@ -105,31 +112,55 @@ class Flappy_Bird:
 				pygame.quit()
 				sys.exit()
 
-				# CONTROLS
-			# if event.type == pygame.key_pressed():
-			# 	pass 
+				# KEYBOARD INPUTS
+			if event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_SPACE:
+					self.jump = 35 
 
 	def is_collision(self):
-		pass
+			# Giving a little buffer zone with +50 so bird has more chance to go further down and up
+		if self.bird_position[0][1] > self.win_height + 100:
+			return True
+		if self.bird_position[0][1] < -300:
+			return True
+
+		return False
 
 	def game_over(self):
 		pass
 
+		# Sends bird to the initial position
 	def reset_game(self):
-		pass
+		self.bird_position = [(self.win_width/4, self.win_height/4)]
 
 	def delta_time(self):
 		pass
+
+		# Main functions which combines all others in order to play the game
+	def play_game(self):
+		self.draw_scene()
+		self.draw_bird()
+		self.move_bird()
+		self.handle_keys()
+	
+		pygame.display.update()
+		self.clock.tick(self.fps)
+
+		if self.is_collision():
+			self.reset_game()
 
 
 def main():
 	flappy = Flappy_Bird()
 
 	while True:
-		flappy.draw_scene()
-		flappy.handle_keys()
+		flappy.play_game()
+		# flappy.draw_scene()
+		# flappy.draw_bird()
+		# flappy.move_bird()
+		# flappy.handle_keys()
 	
-		pygame.display.update()
+		# pygame.display.update()
 
 
 
