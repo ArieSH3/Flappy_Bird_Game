@@ -61,7 +61,7 @@ class Flappy_Bird:
 		self.obst_position = [[self.win_width+10, -200]]  # Set positions for the obstacles 
 		self.jump = 0
 		self.obst_move_speed = 5
-		self.space_between_obst = self.bird_size * 6
+		self.space_between_obst = self.bird_size * 7
 			# Not that optimized as it doesnt take a simple number, rather when the obstacle will spawn
 			# in relation to the position on the previous obstacle
 		self.obstacle_spawn_rate = self.win_width - (self.win_width/3) # When obst passes 1/3 of width the second one will spawn in this case
@@ -88,10 +88,12 @@ class Flappy_Bird:
 		pygame.draw.rect(self.screen, SKY_BLUE_2, rect_mid)
 		pygame.draw.rect(self.screen, SKY_BLUE_3, rect_bot)
 
+	
 	def draw_bird(self):
 		rect = pygame.Rect((self.bird_position[0][0], self.bird_position[0][1]), (self.bird_size, self.bird_size))
 		pygame.draw.rect(self.screen, YELLOW, rect)
 
+	
 	def move_bird(self):
 		# Implementing force of gravity to the y axis of bird position
 		self.bird_position.insert(0, (self.bird_position[0][0], self.bird_position[0][1] + self.gravity))
@@ -100,6 +102,7 @@ class Flappy_Bird:
 			self.bird_position.insert(0, (self.bird_position[0][0], self.bird_position[0][1] - self.jump))
 			self.jump -= 1
 
+	
 	def draw_obstacles(self):
 		for obst in self.obst_position:
 			rect_top = pygame.Rect((obst[0], obst[1]), (self.obst_w, self.obst_h))
@@ -108,6 +111,7 @@ class Flappy_Bird:
 			pygame.draw.rect(self.screen, BLUE, rect_top)		
 			pygame.draw.rect(self.screen, BLUE, rect_bot)
 
+	
 		# Moves obstacles from right to left
 	def move_obstacles(self):
 		spawn_ready = False
@@ -115,24 +119,29 @@ class Flappy_Bird:
 			# Moves obstacles from right to left at constant rate
 			self.obst_position[i][0] -= self.obst_move_speed 
 		
+	
 		# Adds obstacles to the right for the bird to pass through
 	def add_obstacles(self):
 		height_change = random.randint(-350, -50)
 		if self.obst_position[-1][0] < self.obstacle_spawn_rate:
 			self.obst_position.append([self.win_width+200, height_change])
 
+	
 		# Removes obstacles that are out of view/succesfully passed to the left
 		# so the list does not get cluttered and keeps performance high(ish)
 	def remove_obstacles(self):
 		if self.obst_position[0][0] < -100: # -100
 			self.obst_position.pop(0)
 
+	
 	def score(self):
 		pass
 
+	
 	def write_score(self):
 		pass
 
+	
 	def handle_keys(self):
 		for event in pygame.event.get():
 				# QUIT
@@ -145,6 +154,7 @@ class Flappy_Bird:
 				if event.key == pygame.K_SPACE:
 					self.jump = 35 
 
+	
 	def is_collision(self):
 			# Giving a little buffer zone with +50 so bird has more chance to go further down and up
 		if self.bird_position[0][1] > self.win_height + 100:
@@ -154,16 +164,20 @@ class Flappy_Bird:
 
 		return False
 
+	
 	def game_over(self):
 		pass
 
+	
 		# Sends bird to the initial position
 	def reset_game(self):
 		self.bird_position = [(self.win_width/4, self.win_height/4)]
 
+	
 	def delta_time(self):
 		pass
 
+	
 		# Main functions which combines all others in order to play the game
 	def play_game(self):
 		self.draw_scene()
@@ -180,6 +194,7 @@ class Flappy_Bird:
 
 		if self.is_collision():
 			self.reset_game()
+
 
 
 def main():
