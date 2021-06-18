@@ -36,10 +36,10 @@ class Flappy_Bird:
 				 win_width = 800,  # 640
 				 win_height = 600, # 480
  				 bird_size = 35,
-				 obst_w = 80, # obstacle_size
+				 obst_w = 60, # obstacle_size
 				 obst_h = 400,
-				 gravity = 15,
-				 flight_force = 50,
+				 gravity = 17,
+				 flight_force = 17,
 				 h_move_speed = 10,
 				 fps = FPS
 				):
@@ -57,10 +57,11 @@ class Flappy_Bird:
 
 			# Newly defined
 		self.score = 0
-		self.bird_position = [(self.win_width/4, self.win_height/4)]  # Set initial position for the bird
-		self.obst_position = [((self.win_width/2, -200),(self.win_width/2, self.win_height - self.win_height/3))]  # Set positions for the obstacles 
+		self.bird_position = [[self.win_width/4, self.win_height/4]]  # Set initial position for the bird
+		self.obst_position = [[self.win_width+10, -200]]  # Set positions for the obstacles 
 		self.jump = 0
 		self.obst_move_speed = 3
+		self.space_between_obst = self.bird_size * 6
 
 			# ***Initialize pygame and dependencies***
 		pygame.init()
@@ -98,18 +99,31 @@ class Flappy_Bird:
 
 	def draw_obstacles(self):
 		for obst in self.obst_position:
-			rect_top = pygame.Rect((obst[0][0], obst[0][1]), (self.obst_w, self.obst_h))
-			rect_bot = pygame.Rect((obst[0][0], obst[0][1]+(self.obst_h+(self.bird_size*5))), (self.obst_w, self.obst_h))
+			rect_top = pygame.Rect((obst[0], obst[1]), (self.obst_w, self.obst_h))
+			rect_bot = pygame.Rect((obst[0], obst[1]+(self.obst_h+self.space_between_obst)), (self.obst_w, self.obst_h))
 			
 			pygame.draw.rect(self.screen, BLUE, rect_top)		
 			pygame.draw.rect(self.screen, BLUE, rect_bot)
 
 	def move_obstacles(self):
 		for i in range(len(self.obst_position)):
-			self.obst_position[i][0][0] = self.obst_move_speed 
+			self.obst_position[i][0] -= self.obst_move_speed 
+			
+			if self.obst_position[i][0] < self.win_width - 200 and len(self.obst_position) < 4:
+				self.add_obstacles()
+
+			if self.obst_position[i][0] < -100:
+				self.obst_position.pop(0)
 
 	def add_obstacles(self):
-		pass
+		# Vertical height can go from -150 to +150
+		up_or_down = random.randint(0,1)
+		height_change = random.randint(0, 150)
+
+		if up_or_down:
+			self.obst_position.append([self.win_width+10, -200 + height_change])			
+		else:
+			self.obst_position.append([self.win_width+10, -200 - height_change])
 
 	def score(self):
 		pass
