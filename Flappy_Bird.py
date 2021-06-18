@@ -36,7 +36,8 @@ class Flappy_Bird:
 				 win_width = 800,  # 640
 				 win_height = 600, # 480
  				 bird_size = 35,
-				 obst_size = 40, # obstacle_size
+				 obst_w = 80, # obstacle_size
+				 obst_h = 400,
 				 gravity = 15,
 				 flight_force = 50,
 				 h_move_speed = 10,
@@ -47,7 +48,8 @@ class Flappy_Bird:
 		self.win_height = win_height
 
 		self.bird_size  = bird_size
-		self.obst_size  = obst_size
+		self.obst_w  = self.bird_size * 3
+		self.obst_h  = obst_h
 		self.gravity    = gravity
 		self.flight_force = flight_force
 		self.h_move_speed = h_move_speed
@@ -56,8 +58,9 @@ class Flappy_Bird:
 			# Newly defined
 		self.score = 0
 		self.bird_position = [(self.win_width/4, self.win_height/4)]  # Set initial position for the bird
-		self.obst_position = []  # Set positions for the obstacles 
+		self.obst_position = [((self.win_width/2, -200),(self.win_width/2, self.win_height - self.win_height/3))]  # Set positions for the obstacles 
 		self.jump = 0
+		self.obst_move_speed = 3
 
 			# ***Initialize pygame and dependencies***
 		pygame.init()
@@ -85,9 +88,6 @@ class Flappy_Bird:
 		rect = pygame.Rect((self.bird_position[0][0], self.bird_position[0][1]), (self.bird_size, self.bird_size))
 		pygame.draw.rect(self.screen, YELLOW, rect)
 
-	def draw_obstacles(self):
-		pass
-
 	def move_bird(self):
 		# Implementing force of gravity to the y axis of bird position
 		self.bird_position.insert(0, (self.bird_position[0][0], self.bird_position[0][1] + self.gravity))
@@ -96,7 +96,19 @@ class Flappy_Bird:
 			self.bird_position.insert(0, (self.bird_position[0][0], self.bird_position[0][1] - self.jump))
 			self.jump -= 1
 
-	def move_obstacle(self):
+	def draw_obstacles(self):
+		for obst in self.obst_position:
+			rect_top = pygame.Rect((obst[0][0], obst[0][1]), (self.obst_w, self.obst_h))
+			rect_bot = pygame.Rect((obst[0][0], obst[0][1]+(self.obst_h+(self.bird_size*5))), (self.obst_w, self.obst_h))
+			
+			pygame.draw.rect(self.screen, BLUE, rect_top)		
+			pygame.draw.rect(self.screen, BLUE, rect_bot)
+
+	def move_obstacles(self):
+		for i in range(len(self.obst_position)):
+			self.obst_position[i][0][0] = self.obst_move_speed 
+
+	def add_obstacles(self):
 		pass
 
 	def score(self):
@@ -141,6 +153,8 @@ class Flappy_Bird:
 		self.draw_scene()
 		self.draw_bird()
 		self.move_bird()
+		self.draw_obstacles()
+		self.move_obstacles()
 		self.handle_keys()
 	
 		pygame.display.update()
