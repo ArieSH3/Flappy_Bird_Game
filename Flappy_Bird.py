@@ -109,21 +109,26 @@ class Flappy_Bird:
 		for i in range(len(self.obst_position)):
 			self.obst_position[i][0] -= self.obst_move_speed 
 			
-			if self.obst_position[i][0] < self.win_width - 200 and len(self.obst_position) < 4:
+			# if self.obst_position[i][0] < self.win_width - 200 and len(self.obst_position) < 4:
+			if self.obst_position[i][0] < self.win_width and len(self.obst_position) < 5:
 				self.add_obstacles()
 
 			if self.obst_position[i][0] < -100:
 				self.obst_position.pop(0)
+			
 
 	def add_obstacles(self):
 		# Vertical height can go from -150 to +150
 		up_or_down = random.randint(0,1)
 		height_change = random.randint(0, 150)
 
+		#if abs(self.obst_position[0][0] - (self.win_width + 10)) > 200:
 		if up_or_down:
-			self.obst_position.append([self.win_width+10, -200 + height_change])			
+			self.obst_position.append([self.win_width+200, -200 + height_change])	
+			print('up')		
 		else:
-			self.obst_position.append([self.win_width+10, -200 - height_change])
+			self.obst_position.append([self.win_width+200, -200 - height_change])
+			print('down')
 
 	def score(self):
 		pass
