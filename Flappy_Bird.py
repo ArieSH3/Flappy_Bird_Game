@@ -39,7 +39,7 @@ class Flappy_Bird:
 				 obst_w = 60, # obstacle_size
 				 obst_h = 400,
 				 gravity = 17,
-				 flight_force = 17,
+				 flight_force = 11,
 				 h_move_speed = 10,
 				 fps = FPS
 				):
@@ -60,8 +60,11 @@ class Flappy_Bird:
 		self.bird_position = [[self.win_width/4, self.win_height/4]]  # Set initial position for the bird
 		self.obst_position = [[self.win_width+10, -200]]  # Set positions for the obstacles 
 		self.jump = 0
-		self.obst_move_speed = 3
+		self.obst_move_speed = 5
 		self.space_between_obst = self.bird_size * 6
+			# Not that optimized as it doesnt take a simple number, rather when the obstacle will spawn
+			# in relation to the position on the previous obstacle
+		self.obstacle_spawn_rate = self.win_width - (self.win_width/3) # When obst passes 1/3 of width the second one will spawn in this case
 
 			# ***Initialize pygame and dependencies***
 		pygame.init()
@@ -105,30 +108,24 @@ class Flappy_Bird:
 			pygame.draw.rect(self.screen, BLUE, rect_top)		
 			pygame.draw.rect(self.screen, BLUE, rect_bot)
 
+		# Moves obstacles from right to left
 	def move_obstacles(self):
+		spawn_ready = False
 		for i in range(len(self.obst_position)):
+			# Moves obstacles from right to left at constant rate
 			self.obst_position[i][0] -= self.obst_move_speed 
-			
-			# if self.obst_position[i][0] < self.win_width - 200 and len(self.obst_position) < 4:
-			if self.obst_position[i][0] < self.win_width and len(self.obst_position) < 5:
-				self.add_obstacles()
-
-			if self.obst_position[i][0] < -100:
-				self.obst_position.pop(0)
-			
-
+		
+		# Adds obstacles to the right for the bird to pass through
 	def add_obstacles(self):
-		# Vertical height can go from -150 to +150
-		up_or_down = random.randint(0,1)
-		height_change = random.randint(0, 150)
+		height_change = random.randint(-350, -50)
+		if self.obst_position[-1][0] < self.obstacle_spawn_rate:
+			self.obst_position.append([self.win_width+200, height_change])
 
-		#if abs(self.obst_position[0][0] - (self.win_width + 10)) > 200:
-		if up_or_down:
-			self.obst_position.append([self.win_width+200, -200 + height_change])	
-			print('up')		
-		else:
-			self.obst_position.append([self.win_width+200, -200 - height_change])
-			print('down')
+		# Removes obstacles that are out of view/succesfully passed to the left
+		# so the list does not get cluttered and keeps performance high(ish)
+	def remove_obstacles(self):
+		if self.obst_position[0][0] < -100: # -100
+			self.obst_position.pop(0)
 
 	def score(self):
 		pass
@@ -174,6 +171,8 @@ class Flappy_Bird:
 		self.move_bird()
 		self.draw_obstacles()
 		self.move_obstacles()
+		self.add_obstacles()
+		self.remove_obstacles()
 		self.handle_keys()
 	
 		pygame.display.update()
